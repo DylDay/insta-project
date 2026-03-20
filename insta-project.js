@@ -15,6 +15,7 @@ import "./lib/play-list-slide-indicator.js";
  * @demo index.html
  * @element insta-project
  */
+
 export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
 
   static get tag() {
@@ -27,9 +28,23 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     this.currentIndex = 0;
     this.totalSlides = 0;
     this.slides = [];
+    this.foxImg = "";
     this.t = {
       title: "Title",
     };
+  }
+
+  getFoxes() {
+    fetch("https://randomfox.ca/floof/").then((resp) => {
+      if (resp.ok) {
+        return resp.json();
+      }
+    }).then((data) => {
+      let image = document.createElement('img');
+      image.src = data.image;
+      document.querySelector('.image-here').appendChild(image);
+      document.body.appendChild(document.createTextNode(data.link));
+    });
   }
 
   // Lit reactive properties
@@ -40,6 +55,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       currentIndex: { type: Number },
       totalSlides: { type: Number },
       slides: { type: Array},
+      foxImg: { type: String},
     };
   }
 
@@ -92,7 +108,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       @media (prefers-color-scheme: dark) {
         :host {
           background-color: var(--ddd-theme-default-beaverBlue);
-          color: var(---ddd-theme-default-slateMaxLight);
+          color: var(--ddd-theme-default-slateMaxLight);
         }
       }
     `];
@@ -140,15 +156,17 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   // Lit render the HTML
   render() {
     return html`
+      <button @click="${this.getFoxes}">Get a Random Fox</button>
+      <div class="img-here">${this.foxImg}</div>
       <div class="wrapper">
         <play-list-slide-arrow direction="previous" @click="${this.previousSlide}"></play-list-slide-arrow>
         <slot></slot>
         <play-list-slide-arrow direction="next" @click="${this.nextSlide}"></play-list-slide-arrow>
         <play-list-slide-indicator .totalSlides="${this.totalSlides}" .currentIndex="${this.currentIndex}"
-          @indicator-change="${(e) => {
-            this.currentIndex = e.detail.index;
-            this.updateSlides();
-          }}">
+        @indicator-change="${(e) => {
+          this.currentIndex = e.detail.index;
+          this.updateSlides();
+        }}">
         </play-list-slide-indicator>
       </div>`;
   }
