@@ -13,6 +13,10 @@
       padding: var(--ddd-spacing-0);
       background-color: var(--ddd-theme-default-white);
     }
+    body {
+      display: flex;
+      justify-content: center;
+    }
     insta-project {
       margin: var(--ddd-spacing-2);
       border: var(--ddd-border-md);
@@ -20,7 +24,7 @@
     }
     @media (prefers-color-scheme: dark) {
       :root, html, body {
-        background-color: var(--ddd-theme-default-potential75);
+        background-color: #1E1F23;
       }
     }
   </style>
@@ -29,17 +33,13 @@
 
 <body>
   <insta-project current-index="3">
-    <play-list-slide top-heading="Top line heading" second-heading="Slide 1, sub-heading">
-      <p>Text!</p>
+    <play-list-slide top-heading="Username" second-heading="3 hours ago">
     </play-list-slide>
     <play-list-slide top-heading="Custom heading" second-heading="I'm Mary Poppins y'all!">
-      <p>supercalifragilisticexpialidocious supercalifragilisticexpialidocious supercalifragilisticexpialidocious supercalifragilisticexpialidocious supercalifragilisticexpialidocious supercalifragilisticexpialidocious supercalifragilisticexpialidocious supercalifragilisticexpialidocious supercalifragilisticexpialidocious supercalifragilisticexpialidocious </p>
     </play-list-slide>
     <play-list-slide top-heading="To become King of the Pirates" second-heading="Monkey D. Luffy">
-      <p>Timmy is an average kid that no one understands. Mom and Dad and Vicky always giving him commands!</p>
     </play-list-slide>
     <play-list-slide top-heading="To chart a map of the world" second-heading="Nami">
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </play-list-slide>
   </insta-project>
   <script type="module" src="insta-project.js"></script>

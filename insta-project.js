@@ -28,23 +28,9 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     this.currentIndex = 0;
     this.totalSlides = 0;
     this.slides = [];
-    this.foxImg = "";
     this.t = {
       title: "Title",
     };
-  }
-
-  getFoxes() {
-    fetch("https://randomfox.ca/floof/").then((resp) => {
-      if (resp.ok) {
-        return resp.json();
-      }
-    }).then((data) => {
-      let image = document.createElement('img');
-      image.src = data.image;
-      document.querySelector('.image-here').appendChild(image);
-      document.body.appendChild(document.createTextNode(data.link));
-    });
   }
 
   // Lit reactive properties
@@ -55,7 +41,6 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       currentIndex: { type: Number },
       totalSlides: { type: Number },
       slides: { type: Array},
-      foxImg: { type: String},
     };
   }
 
@@ -70,7 +55,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
         font-family: var(--ddd-font-navigation);
         border-radius: var(--ddd-radius-sm);
         position: relative;
-        width: 960px;
+        width: 360px;
         height: 480px;
       }
       .wrapper {
@@ -107,8 +92,8 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       }
       @media (prefers-color-scheme: dark) {
         :host {
-          background-color: var(--ddd-theme-default-beaverBlue);
-          color: var(--ddd-theme-default-slateMaxLight);
+          background-color: #0D1015;
+          color: white;
         }
       }
     `];
@@ -156,8 +141,6 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   // Lit render the HTML
   render() {
     return html`
-      <button @click="${this.getFoxes}">Get a Random Fox</button>
-      <div class="img-here">${this.foxImg}</div>
       <div class="wrapper">
         <play-list-slide-arrow direction="previous" @click="${this.previousSlide}"></play-list-slide-arrow>
         <slot></slot>
@@ -172,4 +155,6 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   }
 }
 
+// todo: change URL address when slide is changed
+// also when user enters site from a link, automaticcaly open to the correct index given by the url
 globalThis.customElements.define(InstaProject.tag, InstaProject);
