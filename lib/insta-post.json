@@ -1,0 +1,17 @@
+{
+    "username": "John Doe",
+    "profile-picture": "www.wikipedia.com",
+    "time-posted": "2 hours ago",
+    "liked": false,
+    "images": [
+        {
+            "url": "www.example.com",
+            "alt": "An image of an example"
+        },
+        {
+            "url": "hax.psu.edu",
+            "alt": "An image of HAX"
+        }
+    ],
+    "description": "This is an example description"
+}
