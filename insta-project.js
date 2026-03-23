@@ -5,9 +5,9 @@
 import { LitElement, html, css } from "lit";
 import { DDDSuper } from "@haxtheweb/d-d-d/d-d-d.js";
 import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
-import "./lib/play-list-slide.js";
-import "./lib/play-list-slide-arrow.js";
-import "./lib/play-list-slide-indicator.js";
+import "./lib/insta-slide.js";
+import "./lib/insta-slide-arrow.js";
+import "./lib/insta-slide-indicator.js";
 
 /**
  * `insta-project`
@@ -74,20 +74,20 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       h3 span {
         font-size: var(--ddd-font-size-s);
       }
-      play-list-slide-indicator {
+      insta-slide-indicator {
         position: absolute;
         bottom: var(--ddd-spacing-8);
         left: var(--ddd-spacing-8);
       }
-      play-list-slide-arrow {
+      insta-slide-arrow {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
       }
-      play-list-slide-arrow[direction="previous"] {
+      insta-slide-arrow[direction="previous"] {
         left: -32px;
       }
-      play-list-slide-arrow[direction="next"] {
+      insta-slide-arrow[direction="next"] {
         right: -32px;
       }
       @media (prefers-color-scheme: dark) {
@@ -118,7 +118,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   firstUpdated() {
-    const slides = Array.from(this.querySelectorAll('play-list-slide'));
+    const slides = Array.from(this.querySelectorAll('insta-slide'));
     this.totalSlides = slides.length;
     this.slides = slides;
     this.updateSlides();
@@ -128,7 +128,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     this.slides.forEach((slide, i) => {
       slide.active = (i === this.currentIndex);
     });
-    const indexChange = new CustomEvent("play-list-index-changed", {
+    const indexChange = new CustomEvent("insta-index-changed", {
       composed: true,
       bubbles: true,
       detail: {
@@ -142,19 +142,21 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   render() {
     return html`
       <div class="wrapper">
-        <play-list-slide-arrow direction="previous" @click="${this.previousSlide}"></play-list-slide-arrow>
+        <insta-slide-arrow direction="previous" @click="${this.previousSlide}"></insta-slide-arrow>
         <slot></slot>
-        <play-list-slide-arrow direction="next" @click="${this.nextSlide}"></play-list-slide-arrow>
-        <play-list-slide-indicator .totalSlides="${this.totalSlides}" .currentIndex="${this.currentIndex}"
+        <insta-slide-arrow direction="next" @click="${this.nextSlide}"></insta-slide-arrow>
+        <insta-slide-indicator .totalSlides="${this.totalSlides}" .currentIndex="${this.currentIndex}"
         @indicator-change="${(e) => {
           this.currentIndex = e.detail.index;
           this.updateSlides();
         }}">
-        </play-list-slide-indicator>
+        </insta-slide-indicator>
       </div>`;
   }
 }
 
 // todo: change URL address when slide is changed
-// also when user enters site from a link, automaticcaly open to the correct index given by the url
+// also when user enters site from a link, automatically open to the correct index given by the url
+// change colors back to DDD
+// when a post is liked, remember that the post is liked when reloaded
 globalThis.customElements.define(InstaProject.tag, InstaProject);
