@@ -62,7 +62,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       .wrapper {
         position: relative;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         height: 100%;
         margin: var(--ddd-spacing-2);
         padding-left: var(--ddd-spacing-4);
@@ -75,11 +75,6 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       h3 span {
         font-size: var(--ddd-font-size-s);
       }
-      insta-slide-indicator {
-        position: absolute;
-        bottom: var(--ddd-spacing-8);
-        left: var(--ddd-spacing-8);
-      }
       insta-slide-arrow {
         position: absolute;
         top: 50%;
@@ -90,6 +85,15 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       }
       insta-slide-arrow[direction="next"] {
         right: -32px;
+      }
+      insta-slide-indicator {
+        position: absolute;
+        bottom: var(--ddd-spacing-20);
+        left: var(--ddd-spacing-8);
+      }
+      insta-interaction-bar {
+        position: absolute;
+        bottom: var(--ddd-spacing-4);
       }
       @media (prefers-color-scheme: dark) {
         :host {
@@ -122,6 +126,14 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     const slides = Array.from(this.querySelectorAll('insta-slide'));
     this.totalSlides = slides.length;
     this.slides = slides;
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlSlide = urlParams.get('slide');
+    if (urlSlide !== null) {
+    const requestedIndex = parseInt(urlSlide);
+    if (requestedIndex >= 0 && requestedIndex < this.totalSlides) {
+      this.currentIndex = requestedIndex;
+    }
+  }
     this.updateSlides();
   }
 
@@ -129,6 +141,9 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     this.slides.forEach((slide, i) => {
       slide.active = (i === this.currentIndex);
     });
+    const url = new URL(window.location.href);
+    url.searchParams.set('slide', this.currentIndex);
+    window.history.pushState({}, '', url);
     const indexChange = new CustomEvent("insta-index-changed", {
       composed: true,
       bubbles: true,
@@ -152,6 +167,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
           this.updateSlides();
         }}">
         </insta-slide-indicator>
+        <insta-interaction-bar></insta-interaction-bar>
       </div>`;
   }
 }
