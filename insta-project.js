@@ -8,6 +8,7 @@ import { I18NMixin } from "@haxtheweb/i18n-manager/lib/I18NMixin.js";
 import "./lib/insta-slide.js";
 import "./lib/insta-slide-arrow.js";
 import "./lib/insta-slide-indicator.js";
+import "./lib/insta-interaction-bar.js";
 
 /**
  * `insta-project`

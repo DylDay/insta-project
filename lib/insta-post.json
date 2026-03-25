@@ -1,17 +1,23 @@
 {
-    "username": "John Doe",
-    "profile-picture": "www.wikipedia.com",
-    "time-posted": "2 hours ago",
-    "liked": false,
+    "author": {
+        "username": "John Doe",
+        "profile-picture": "profile.jpg"
+    },
     "images": [
         {
-            "url": "www.example.com",
+            "src": "example1.png",
             "alt": "An image of an example"
         },
         {
-            "url": "hax.psu.edu",
+            "src": "example2.png",
             "alt": "An image of HAX"
+        },
+        {
+            "src": "example3.png",
+            "alt": "An image of PSU"
         }
     ],
+    "time-posted": "2 hours ago",
+    "liked": false,
     "description": "This is an example description"
 }
