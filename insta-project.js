@@ -119,7 +119,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   }
 
   async firstUpdated() {
-    const response = await fetch('/lib/insta-post.json');
+    const response = await fetch(new URL('./lib/insta-post.json', import.meta.url).href);
     const jsonData = await response.json();
     this.postData = jsonData;
     this.slides = jsonData.images;
