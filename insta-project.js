@@ -29,6 +29,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     this.currentIndex = 0;
     this.totalSlides = 0;
     this.slides = [];
+    this.postData = null;
     this.t = {
       title: "Title",
     };
@@ -42,6 +43,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       currentIndex: { type: Number },
       totalSlides: { type: Number },
       slides: { type: Array},
+      postData: { type: Object },
     };
   }
 
@@ -57,12 +59,11 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
         border-radius: var(--ddd-radius-sm);
         position: relative;
         width: 360px;
-        height: 480px;
+        height: 600px;
       }
       .wrapper {
         position: relative;
-        display: flex;
-        align-items: flex-start;
+        display: block;
         height: 100%;
         margin: var(--ddd-spacing-2);
         padding-left: var(--ddd-spacing-4);
@@ -87,14 +88,9 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
         right: -32px;
       }
       insta-slide-indicator {
-        position: absolute;
-        bottom: var(--ddd-spacing-20);
         left: var(--ddd-spacing-8);
       }
-      insta-interaction-bar {
-        position: absolute;
-        bottom: var(--ddd-spacing-4);
-      }
+      
       @media (prefers-color-scheme: dark) {
         :host {
           background-color: #0D1015;
@@ -122,10 +118,13 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     this.updateSlides();
   }
 
-  firstUpdated() {
-    const slides = Array.from(this.querySelectorAll('insta-slide'));
-    this.totalSlides = slides.length;
-    this.slides = slides;
+  async firstUpdated() {
+    const response = await fetch('./lib/insta-post.json');
+    const jsonData = await response.json();
+    this.postData = jsonData;
+    this.slides = jsonData.images;
+    this.totalSlides = this.slides.length;
+
     const urlParams = new URLSearchParams(window.location.search);
     const urlSlide = urlParams.get('slide');
     if (urlSlide !== null) {
@@ -141,9 +140,9 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     this.slides.forEach((slide, i) => {
       slide.active = (i === this.currentIndex);
     });
-    const url = new URL(window.location.href);
-    url.searchParams.set('slide', this.currentIndex);
-    window.history.pushState({}, '', url);
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('slide', this.currentIndex);
+    window.history.pushState({}, '', currentUrl);
     const indexChange = new CustomEvent("insta-index-changed", {
       composed: true,
       bubbles: true,
@@ -158,22 +157,35 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   render() {
     return html`
       <div class="wrapper">
-        <insta-slide-arrow direction="previous" @click="${this.previousSlide}"></insta-slide-arrow>
-        <slot></slot>
-        <insta-slide-arrow direction="next" @click="${this.nextSlide}"></insta-slide-arrow>
-        <insta-slide-indicator .totalSlides="${this.totalSlides}" .currentIndex="${this.currentIndex}"
-        @indicator-change="${(e) => {
-          this.currentIndex = e.detail.index;
-          this.updateSlides();
-        }}">
-        </insta-slide-indicator>
-        <insta-interaction-bar></insta-interaction-bar>
+        <div class="header">
+          <img src="${this.postData?.author['profile-picture']}" width="30">
+          <span>${this.postData?.author.username}</span>
+          <span>${this.postData?.post['time-posted']}</span>
+        </div>
+        <div class="slides-container">
+        ${this.slides.map((image, index) => html`
+          <insta-slide 
+            .src="${image.src}" 
+            .alt="${image.alt}"
+            ?active="${index === this.currentIndex}">
+          </insta-slide>
+        `)}
+      </div>
+        <div class="body">
+          <insta-slide-arrow direction="previous" @click="${this.previousSlide}"></insta-slide-arrow>
+          <insta-slide-arrow direction="next" @click="${this.nextSlide}"></insta-slide-arrow>
+          <insta-slide-indicator .totalSlides="${this.totalSlides}" .currentIndex="${this.currentIndex}"
+            @indicator-change="${(e) => {
+              this.currentIndex = e.detail.index;
+              this.updateSlides();
+            }}">
+          </insta-slide-indicator>
+          <insta-interaction-bar></insta-interaction-bar>
+          <div class="description">${this.postData?.post.description}</div>
+        </div>
       </div>`;
   }
 }
 
-// todo: change URL address when slide is changed
-// also when user enters site from a link, automatically open to the correct index given by the url
-// change colors back to DDD
-// when a post is liked, remember that the post is liked when reloaded
+// todo: change colors back to DDD
 globalThis.customElements.define(InstaProject.tag, InstaProject);
