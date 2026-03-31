@@ -51,10 +51,11 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   static get styles() {
     return [super.styles,
     css`
+
       :host {
         display: block;
-        color: var(--ddd-theme-default-beaverBlue);
-        background-color: var(--ddd-theme-default-slateMaxLight);
+        color: light-dark(var(--ddd-theme-default-beaverBlue), var(--ddd-theme-default-white));
+        background-color: light-dark(var(--ddd-theme-default-slateMaxLight), var(--ddd-theme-default-coalyGray));
         font-family: var(--ddd-font-navigation);
         border-radius: var(--ddd-radius-sm);
         position: relative;
@@ -89,13 +90,6 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       }
       insta-slide-indicator {
         left: var(--ddd-spacing-8);
-      }
-      
-      @media (prefers-color-scheme: dark) {
-        :host {
-          background-color: #0D1015;
-          color: white;
-        }
       }
     `];
   }
@@ -188,4 +182,5 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
 }
 
 // todo: change colors back to DDD
+// Use thumbnails for on hover of user profile which shows # followers and # following on hover
 globalThis.customElements.define(InstaProject.tag, InstaProject);
