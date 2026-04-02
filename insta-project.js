@@ -74,8 +74,19 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
         flex: 1 1 auto;
         display: block;
       }
-      h3 span {
-        font-size: var(--ddd-font-size-s);
+      .header {
+        display: flex;
+        align-items: center;
+      }
+      .profile-picture {
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: var(--ddd-radius-circle);
+        margin-right: var(--ddd-spacing-2);
+      }
+      .slides-container {
+        display: flex;
+        justify-content: center;
       }
       insta-slide-arrow {
         position: absolute;
@@ -152,9 +163,8 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     return html`
       <div class="wrapper">
         <div class="header">
-          <img src="${this.postData?.author['profile-picture']}" width="30">
+          <img class="profile-picture" src="${this.postData?.author['profile-picture']}" width="30">
           <span>${this.postData?.author.username}</span>
-          <span>${this.postData?.post['time-posted']}</span>
         </div>
         <div class="slides-container">
         ${this.slides.map((image, index) => html`
@@ -181,6 +191,5 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
   }
 }
 
-// todo: change colors back to DDD
-// Use thumbnails for on hover of user profile which shows # followers and # following on hover
+// todo: Use thumbnails for on hover of user profile which shows # followers and # following on hover
 globalThis.customElements.define(InstaProject.tag, InstaProject);
