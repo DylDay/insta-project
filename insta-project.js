@@ -30,9 +30,8 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
     this.totalSlides = 0;
     this.slides = [];
     this.postData = null;
-    this.t = {
-      title: "Title",
-    };
+    this.isOverlayOpen = false;
+    this.activeOverlayImage = null;
   }
 
   // Lit reactive properties
@@ -44,6 +43,8 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       totalSlides: { type: Number },
       slides: { type: Array},
       postData: { type: Object },
+      isOverlayOpen: { type: Boolean },
+      activeOverlayImage: { type: Object }
     };
   }
 
@@ -102,6 +103,37 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       insta-slide-indicator {
         left: var(--ddd-spacing-8);
       }
+      .overlay-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      .overlay-card {
+        text-align: center;
+      }
+      .overlay-card img {
+        max-width: 100%;
+        max-height: 70vh;
+        object-fit: contain;
+      }
+      .overlay-card button {
+        background-color: var(--ddd-theme-default-nittanyNavy);
+        color: var(--ddd-theme-default-white);
+        border: var(--ddd-border-xs);
+        border-radius: var(--ddd-radius-sm);
+        padding: var(--ddd-spacing-2) var(--ddd-spacing-4);
+        border-color: transparent;
+      }
+      .overlay-card button:hover {
+        background-color: var(--ddd-theme-default-beaverBlue);
+      }
     `];
   }
 
@@ -121,6 +153,11 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       this.currentIndex = this.totalSlides - 1;
     }
     this.updateSlides();
+  }
+
+  openOverlay(image) {
+    this.activeOverlayImage = image;
+    this.isOverlayOpen = true;
   }
 
   async firstUpdated() {
@@ -160,6 +197,10 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
 
   // Lit render the HTML
   render() {
+    if (!this.postData) {
+      return html`<div class="loading-skeleton"></div>`;
+    }
+
     return html`
       <div class="wrapper">
         <div class="header">
@@ -169,12 +210,23 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
         <div class="slides-container">
         ${this.slides.map((image, index) => html`
           <insta-slide 
-            .src="${image.src}" 
+            .thumbnailSource="${image['thumbnail-source']}" 
+            .fullSizeSource="${image['full-size-source']}"
             .alt="${image.alt}"
+            @click="${() => this.openOverlay(image)}"
             ?active="${index === this.currentIndex}">
           </insta-slide>
         `)}
-      </div>
+        </div>
+        ${this.isOverlayOpen ? html`
+          <div class="overlay-backdrop" @click="${() => this.isOverlayOpen = false}">
+            <div class="overlay-card" @click="${(e) => e.stopPropagation()}">
+              <img src="${this.activeOverlayImage['full-size-source']}" />
+              <p>${this.activeOverlayImage.alt}</p>
+              <button @click="${() => this.isOverlayOpen = false}">Close</button>
+            </div>
+          </div>
+        ` : ''}
         <div class="body">
           <insta-slide-arrow direction="previous" @click="${this.previousSlide}"></insta-slide-arrow>
           <insta-slide-arrow direction="next" @click="${this.nextSlide}"></insta-slide-arrow>
@@ -187,7 +239,8 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
           <insta-interaction-bar></insta-interaction-bar>
           <div class="description">${this.postData?.post.description}</div>
         </div>
-      </div>`;
+      </div>
+      `;
   }
 }
 
