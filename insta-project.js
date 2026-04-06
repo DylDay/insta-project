@@ -105,8 +105,8 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
       }
       .overlay-backdrop {
         position: fixed;
-        top: 0;
-        left: 0;
+        top: var(--ddd-spacing-0);
+        left: var(--ddd-spacing-0);
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.6);
@@ -129,7 +129,7 @@ export class InstaProject extends DDDSuper(I18NMixin(LitElement)) {
         border: var(--ddd-border-xs);
         border-radius: var(--ddd-radius-sm);
         padding: var(--ddd-spacing-2) var(--ddd-spacing-4);
-        border-color: transparent;
+        border-color: var(--ddd-theme-default-potential0);
       }
       .overlay-card button:hover {
         background-color: var(--ddd-theme-default-beaverBlue);
